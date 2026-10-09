@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Management • WhatsApp Enabled</title>
+  <style>
+    /* ---------- GLOBAL RESET ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    /* ---------- LIGHT THEME VARIABLES (DEFAULT) ---------- */
+    :root {
+      --primary: #2c6e9c;
+      --primary-light: #e8f0f9;
+      --primary-dark: #1f567b;
+      --accent: #4a8bb8;
+      --success: #2e8b6c;
+      --whatsapp: #25D366;
+      --whatsapp-dark: #128C7E;
+      --gray-bg: #f4f7fc;
+      --gray-bg-alt: #eaf1f8;
+      --card-bg: #ffffff;
+      --card-bg-soft: #f9fcff;
+      --card-bg-lighter: #fafdff;
+      --text-dark: #1e2a41;
+      --text-muted: #5a6c84;
+      --border-light: #d9e2ec;
+      --table-row-hover: #f4f9ff;
+      --bar-track: #e3ebf3;
+      --header-gradient-start: #2c6e9c;
+      --header-gradient-end: #4a8bb8;
+      --danger-text: #b33a3a;
+      --danger-border: #f0c0c0;
+      --danger-bg-hover: #fef0f0;
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02);
+      --shadow-hover: 0 10px 24px rgba(0, 20, 40, 0.1);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: 0.22s ease;
+    }
+
+    /* ---------- DARK THEME VARIABLES ---------- */
+    body.dark {
+      --primary: #5fa8d3;
+      --primary-light: #1e3448;
+      --primary-dark: #4a8bb8;
+      --accent: #7bb8dc;
+      --success: #4ecba0;
+      --gray-bg: #0f1620;
+      --gray-bg-alt: #131c28;
+      --card-bg: #1a2331;
+      --card-bg-soft: #1f2a3a;
+      --card-bg-lighter: #212d3e;
+      --text-dark: #e6edf5;
+      --text-muted: #96a5b8;
+      --border-light: #2c3a4d;
+      --table-row-hover: #223046;
+      --bar-track: #2a3850;
+      --header-gradient-start: #2a5d85;
+      --header-gradient-end: #3f7ba8;
+      --danger-text: #f08a8a;
+      --danger-border: #5a3030;
+      --danger-bg-hover: #3a2020;
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.25);
+      --shadow-hover: 0 10px 24px rgba(0, 0, 0, 0.45);
+    }
+
+    body {
+      background: linear-gradient(160deg, var(--gray-bg) 0%, var(--gray-bg-alt) 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 1.5rem;
+      margin: 0;
+      color: var(--text-dark);
+      line-height: 1.5;
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+
+    /* ---------- MAIN CONTAINER ---------- */
+    .app-container {
+      max-width: 1320px;
+      width: 100%;
+    }
+
+    .main-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      padding: 2.2rem 2rem;
+      transition: box-shadow var(--transition), background 0.35s ease;
+    }
+
+    /* ---------- HEADER ---------- */
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .header-left h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .header-left p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      padding-left: 0.2rem;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+    }
+
+    .stat-pill.green {
+      background: rgba(46, 139, 108, 0.15);
+      color: var(--success);
+    }
+
+    /* ---------- DARK MODE TOGGLE ---------- */
+    .theme-toggle {
+      background: var(--card-bg-soft);
+      border: 1.5px solid var(--border-light);
+      color: var(--text-dark);
+      padding: 0.55rem 0.9rem;
+      border-radius: 40px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .theme-toggle .icon {
+      font-size: 1rem;
+      transition: transform 0.4s ease;
+    }
+
+    .theme-toggle:hover .icon {
+      transform: rotate(20deg) scale(1.1);
+    }
+
+    /* ---------- COLLAPSIBLE FORM ---------- */
+    .form-toggle-btn {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: background var(--transition), box-shadow var(--transition);
+      margin-bottom: 1.2rem;
+      box-shadow: 0 3px 10px rgba(44, 110, 156, 0.2);
+    }
+
+    .form-toggle-btn:hover {
+      background: var(--primary-dark);
+      box-shadow: 0 5px 16px rgba(44, 110, 156, 0.3);
+    }
+
+    .form-toggle-btn .arrow {
+      transition: transform 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .form-toggle-btn.open .arrow {
+      transform: rotate(180deg);
+    }
+
+    .form-card {
+      background: var(--primary-light);
+      border-radius: var(--radius-sm);
+      padding: 1.6rem 1.5rem 1.8rem;
+      margin-bottom: 1.8rem;
+      border: 1px solid var(--border-light);
+      transition: max-height 0.35s ease, opacity 0.3s ease, padding 0.3s ease, margin 0.3s ease, background 0.35s ease;
+      max-height: 900px;
+      overflow: hidden;
+      opacity: 1;
+    }
+
+    .form-card.collapsed {
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      margin-bottom: 0;
+      opacity: 0;
+      border-width: 0;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.1rem 1.2rem;
+      align-items: end;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .input-group label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--primary);
+    }
+
+    .input-group input,
+    .input-group select {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      color: var(--text-dark);
+      transition: border var(--transition), box-shadow var(--transition), background 0.35s ease;
+      outline: none;
+      width: 100%;
+    }
+
+    .input-group input::placeholder {
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(44, 110, 156, 0.15);
+    }
+
+    .input-group input.error-field {
+      border-color: #d14c4c;
+      background-color: rgba(209, 76, 76, 0.1);
+    }
+
+    .error-msg {
+      color: #d14c4c;
+      font-size: 0.73rem;
+      min-height: 0.9rem;
+    }
+
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1.4rem;
+      align-items: center;
+    }
+
+    /* ---------- BUTTONS ---------- */
+    button {
+      cursor: pointer;
+      border: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.7rem 1.4rem;
+      border-radius: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      transition: background var(--transition), transform 0.1s, box-shadow var(--transition), color var(--transition), border-color var(--transition);
+      background: var(--card-bg);
+      border: 1px solid var(--border-light);
+      color: var(--text-dark);
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border: 1px solid var(--primary);
+      color: white;
+      box-shadow: 0 2px 8px rgba(44, 110, 156, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      box-shadow: 0 6px 14px rgba(44, 110, 156, 0.3);
+    }
+
+    .btn-outline {
+      background: var(--card-bg);
+      border: 1px solid var(--border-light);
+      color: var(--text-dark);
+    }
+
+    .btn-outline:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-danger {
+      background: var(--card-bg);
+      border: 1px solid var(--danger-border);
+      color: var(--danger-text);
+    }
+
+    .btn-danger:hover {
+      background: var(--danger-bg-hover);
+      border-color: var(--danger-text);
+    }
+
+    .btn-whatsapp {
+      background: var(--whatsapp);
+      border: 1px solid var(--whatsapp);
+      color: white;
+      box-shadow: 0 2px 8px rgba(37, 211, 102, 0.25);
+    }
+
+    .btn-whatsapp:hover {
+      background: var(--whatsapp-dark);
+      border-color: var(--whatsapp-dark);
+      box-shadow: 0 6px 14px rgba(37, 211, 102, 0.35);
+      color: white;
+    }
+
+    .btn-small {
+      padding: 0.42rem 1rem;
+      font-size: 0.78rem;
+    }
+
+    /* ---------- TOOLBAR ---------- */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.9rem;
+      margin-bottom: 1rem;
+      padding: 1rem 1.2rem;
+      background: var(--card-bg-soft);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      transition: background 0.35s ease;
+    }
+
+    .search-wrapper {
+      flex: 1 1 260px;
+      position: relative;
+    }
+
+    .search-wrapper input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: 1px solid var(--border-light);
+      border-radius: 40px;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      color: var(--text-dark);
+      transition: border var(--transition), box-shadow var(--transition), background 0.35s ease;
+    }
+
+    .search-wrapper input::placeholder {
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    .search-wrapper input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(44, 110, 156, 0.1);
+      outline: none;
+    }
+
+    .search-wrapper::before {
+      content: "🔍";
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      opacity: 0.55;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 0.7rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* ---------- FILTER CHIPS ---------- */
+    .filter-chips-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.55rem;
+      margin-bottom: 1.5rem;
+      padding: 0.9rem 1.1rem;
+      background: var(--card-bg-soft);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      transition: background 0.35s ease;
+    }
+
+    .filter-chips-bar .chips-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      margin-right: 0.3rem;
+    }
+
+    .chip {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border-light);
+      color: var(--text-dark);
+      padding: 0.42rem 1.05rem;
+      border-radius: 30px;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all var(--transition);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .chip:hover {
+      border-color: var(--accent);
+      background: var(--primary-light);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 3px 10px rgba(44, 110, 156, 0.3);
+    }
+
+    .chip.active:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+      color: white;
+    }
+
+    .chip .chip-count {
+      background: rgba(0, 0, 0, 0.08);
+      padding: 0.05rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    body.dark .chip .chip-count {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .chip.active .chip-count {
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    /* ---------- DEPARTMENT GROUP ---------- */
+    .dept-group {
+      margin-bottom: 1.8rem;
+      animation: fadeIn 0.35s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .dept-group-header {
+      background: linear-gradient(90deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+      color: white;
+      padding: 0.85rem 1.3rem;
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      font-weight: 700;
+      font-size: 0.98rem;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .dept-group-header .dept-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .dept-group-header .dept-count {
+      background: rgba(255, 255, 255, 0.22);
+      padding: 0.2rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* ---------- TABLE ---------- */
+    .table-container {
+      overflow-x: auto;
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+      border: 1px solid var(--border-light);
+      border-top: none;
+      background: var(--card-bg);
+      transition: background 0.35s ease;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 950px;
+      font-size: 0.92rem;
+    }
+
+    th {
+      text-align: left;
+      padding: 0.95rem 1rem;
+      background: var(--card-bg-soft);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border-light);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: middle;
+      color: var(--text-dark);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr {
+      transition: background var(--transition);
+    }
+
+    tbody tr:hover {
+      background: var(--table-row-hover);
+    }
+
+    .actions-cell {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .badge-dept {
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .phone-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: nowrap;
+    }
+
+    .phone-number {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+      white-space: nowrap;
+    }
+
+    /* ---------- EMPTY STATE ---------- */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      background: var(--card-bg-lighter);
+      border-radius: var(--radius-sm);
+      border: 1px dashed var(--border-light);
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .empty-state span {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 0.6rem;
+      opacity: 0.5;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ---------- CHART SECTION ---------- */
+    .chart-section {
+      margin-top: 2.5rem;
+      padding: 1.8rem 1.6rem;
+      background: linear-gradient(160deg, var(--card-bg-soft) 0%, var(--primary-light) 100%);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-light);
+      transition: background 0.35s ease;
+    }
+
+    .chart-section h2 {
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+    }
+
+    .chart-section .chart-sub {
+      color: var(--text-muted);
+      font-size: 0.87rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .chart-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .chart-row {
+      display: grid;
+      grid-template-columns: 130px 1fr 60px;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .chart-label {
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chart-bar-track {
+      background: var(--bar-track);
+      border-radius: 30px;
+      height: 26px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+      transition: background 0.35s ease;
+    }
+
+    .chart-bar-fill {
+      height: 100%;
+      border-radius: 30px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 0.6rem;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      min-width: 26px;
+    }
+
+    .chart-value {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--primary);
+      text-align: right;
+    }
+
+    /* ---------- WHATSAPP MODAL ---------- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 22, 32, 0.65);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-box {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      max-width: 520px;
+      width: 100%;
+      overflow: hidden;
+      animation: popIn 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, var(--whatsapp) 0%, var(--whatsapp-dark) 100%);
+      color: white;
+      padding: 1.2rem 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      justify-content: space-between;
+    }
+
+    .modal-header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .modal-header-left .wa-icon {
+      font-size: 1.6rem;
+    }
+
+    .modal-header-left h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .modal-header-left p {
+      font-size: 0.8rem;
+      opacity: 0.9;
+      margin: 0;
+    }
+
+    .modal-close {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition);
+      padding: 0;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .modal-body {
+      padding: 1.4rem;
+    }
+
+    .recipient-info {
+      background: var(--card-bg-soft);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .recipient-info .label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 0.15rem;
+    }
+
+    .recipient-info .value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .recipient-info .phone {
+      font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+      color: var(--whatsapp-dark);
+      font-size: 0.9rem;
+      margin-top: 0.15rem;
+    }
+
+    .modal-body label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--primary);
+      margin-bottom: 0.4rem;
+    }
+
+    .modal-body textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: var(--card-bg);
+      color: var(--text-dark);
+      resize: vertical;
+      outline: none;
+      transition: border var(--transition), box-shadow var(--transition);
+    }
+
+    .modal-body textarea:focus {
+      border-color: var(--whatsapp);
+      box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.18);
+    }
+
+    .modal-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.35rem;
+    }
+
+    .modal-footer {
+      padding: 0 1.4rem 1.4rem;
+      display: flex;
+      gap: 0.7rem;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .modal-footer button {
+      min-width: 130px;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 700px) {
+      body {
+        padding: 0.7rem;
+      }
+
+      .main-card {
+        padding: 1.4rem 1rem;
+      }
+
+      .header-left h1 {
+        font-size: 1.45rem;
+      }
+
+      .header-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 0.9rem;
+      }
+
+      .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .form-actions button {
+        width: 100%;
+      }
+
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .toolbar-actions {
+        justify-content: space-between;
+      }
+
+      .filter-chips-bar {
+        padding: 0.8rem 0.9rem;
+      }
+
+      .filter-chips-bar .chips-label {
+        width: 100%;
+        margin-bottom: 0.3rem;
+      }
+
+      .chip {
+        font-size: 0.78rem;
+        padding: 0.38rem 0.9rem;
+      }
+
+      .chart-row {
+        grid-template-columns: 95px 1fr 40px;
+        gap: 0.6rem;
+      }
+
+      .chart-label {
+        font-size: 0.78rem;
+      }
+
+      .chart-bar-track {
+        height: 22px;
+      }
+
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tbody tr {
+        background: var(--card-bg);
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-sm);
+        margin: 0.6rem 0.7rem;
+        padding: 0.7rem 0.9rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      }
+
+      .table-container {
+        border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+        padding-bottom: 0.4rem;
+      }
+
+      tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.55rem 0;
+        border: none;
+        font-size: 0.88rem;
+      }
+
+      tbody td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        flex: 0 0 100px;
+      }
+
+      .actions-cell {
+        justify-content: flex-end;
+        margin-top: 0.2rem;
+        flex-wrap: wrap;
+      }
+
+      td[data-label="Actions"] {
+        justify-content: flex-end;
+      }
+
+      td[data-label="Actions"]::before {
+        flex: 1;
+        text-align: left;
+      }
+
+      .phone-cell {
+        justify-content: flex-end;
+      }
+
+      .dept-group-header {
+        font-size: 0.85rem;
+        padding: 0.7rem 1rem;
+      }
+
+      .chart-section {
+        padding: 1.3rem 1rem;
+      }
+
+      .chart-section h2 {
+        font-size: 1.05rem;
+      }
+
+      .modal-footer {
+        flex-direction: column-reverse;
+      }
+
+      .modal-footer button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .chart-row {
+        grid-template-columns: 1fr;
+        gap: 0.3rem;
+      }
+
+      .chart-label {
+        font-size: 0.8rem;
+      }
+
+      .chart-value {
+        text-align: left;
+      }
+
+      .theme-toggle span:not(.icon) {
+        display: none;
+      }
+    }
+
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <div class="main-card">
+
+      <!-- HEADER -->
+      <div class="header">
+        <div class="header-left">
+          <h1>👥 Employee Management</h1>
+          <p>Organized by department • WhatsApp enabled • Data stored locally</p>
+        </div>
+        <div class="header-right">
+          <div class="header-stats">
+            <div class="stat-pill" id="totalCountPill">👤 Total: 0</div>
+            <div class="stat-pill green" id="deptCountPill">🏢 Departments: 0</div>
+          </div>
+          <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">
+            <span class="icon" id="themeIcon">🌙</span>
+            <span id="themeLabel">Dark Mode</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TOGGLE FORM BUTTON -->
+      <button type="button" class="form-toggle-btn" id="formToggleBtn">
+        <span>➕ Add New Employee</span>
+        <span class="arrow">▼</span>
+      </button>
+
+      <!-- ADD EMPLOYEE FORM -->
+      <div class="form-card collapsed" id="formCard">
+        <form id="employeeForm" novalidate>
+          <div class="form-grid">
+            <div class="input-group">
+              <label for="fullName">Full Name *</label>
+              <input type="text" id="fullName" placeholder="e.g. Jamie Chen" autocomplete="off">
+              <div class="error-msg" id="nameError"></div>
+            </div>
+            <div class="input-group">
+              <label for="email">Email *</label>
+              <input type="email" id="email" placeholder="jamie@company.com" autocomplete="off">
+              <div class="error-msg" id="emailError"></div>
+            </div>
+            <div class="input-group">
+              <label for="phone">Phone (WhatsApp)</label>
+              <input type="tel" id="phone" placeholder="+91 98765 43210" autocomplete="off">
+              <div class="error-msg" id="phoneError"></div>
+            </div>
+            <div class="input-group">
+              <label for="position">Position / Job Title *</label>
+              <input type="text" id="position" placeholder="Frontend Developer" autocomplete="off">
+              <div class="error-msg" id="positionError"></div>
+            </div>
+            <div class="input-group">
+              <label for="department">Department</label>
+              <select id="department">
+                <option value="HR">HR</option>
+                <option value="IT">IT</option>
+                <option value="Finance">Finance</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Sales">Sales</option>
+                <option value="Operations">Operations</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="salary">Salary (USD)</label>
+              <input type="number" id="salary" placeholder="60000" min="0" step="1000">
+              <div class="error-msg" id="salaryError"></div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" id="addBtn">➕ Add Employee</button>
+            <button type="button" class="btn-outline" id="resetFormBtn">Reset Form</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+        <div class="search-wrapper">
+          <input type="text" id="searchInput" placeholder="Search by name or email...">
+        </div>
+        <div class="toolbar-actions">
+          <button class="btn-danger btn-small" id="clearAllBtn">🗑️ Clear All</button>
+        </div>
+      </div>
+
+      <!-- FILTER CHIPS -->
+      <div class="filter-chips-bar" id="filterChipsBar">
+        <span class="chips-label">Filter:</span>
+        <button class="chip active" data-dept="all" id="chipAll">
+          All <span class="chip-count" id="countAll">0</span>
+        </button>
+      </div>
+
+      <!-- EMPLOYEE LIST -->
+      <div id="employeeTableContainer"></div>
+
+      <!-- EMPTY STATE -->
+      <div class="empty-state hidden" id="emptyState">
+        <span>📭</span>
+        No employees added yet. Click "Add New Employee" to get started.
+      </div>
+
+      <!-- CHART SECTION -->
+      <div class="chart-section" id="chartSection">
+        <h2>📊 Department Distribution</h2>
+        <p class="chart-sub">Number of employees in each department</p>
+        <div class="chart-bars" id="chartBars"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- WHATSAPP MODAL (hidden by default) -->
+  <div class="modal-overlay hidden" id="whatsappModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <span class="wa-icon">💬</span>
+          <div>
+            <h3>Send WhatsApp Message</h3>
+            <p>Type your message — it opens in WhatsApp</p>
+          </div>
+        </div>
+        <button class="modal-close" id="modalCloseBtn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="recipient-info">
+          <div class="label">To</div>
+          <div class="value" id="modalRecipientName">—</div>
+          <div class="phone" id="modalRecipientPhone">—</div>
+        </div>
+        <label for="whatsappMessage">Your Message</label>
+        <textarea id="whatsappMessage" placeholder="Hi! Just checking in..."></textarea>
+        <div class="modal-hint">
+          <span>💡</span>
+          <span>You can edit this message before it opens in WhatsApp. Press <strong>Ctrl+Enter</strong> to send.</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" id="modalCancelBtn">Cancel</button>
+        <button class="btn-whatsapp" id="modalSendBtn">💬 Open WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // ==================================================
+      // THEME (DARK MODE)
+      // ==================================================
+      const THEME_KEY = 'employee_management_theme';
+
+      function applyTheme(theme) {
+        const body = document.body;
+        const icon = document.getElementById('themeIcon');
+        const label = document.getElementById('themeLabel');
+
+        if (theme === 'dark') {
+          body.classList.add('dark');
+          icon.textContent = '☀️';
+          label.textContent = 'Light Mode';
+        } else {
+          body.classList.remove('dark');
+          icon.textContent = '🌙';
+          label.textContent = 'Dark Mode';
+        }
+      }
+
+      function toggleTheme() {
+        const current = document.body.classList.contains('dark') ? 'dark' : 'light';
+        const next = current === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(THEME_KEY, next);
+        applyTheme(next);
+      }
+
+      function loadTheme() {
+        const saved = localStorage.getItem(THEME_KEY);
+        applyTheme(saved === 'dark' ? 'dark' : 'light');
+      }
+
+      // ==================================================
+      // STATE
+      // ==================================================
+      let employees = loadEmployeesFromStorage();
+      let editMode = false;
+      let editingId = null;
+      let activeDeptFilter = 'all';
+      let currentWhatsAppEmployee = null;
+
+      // ==================================================
+      // DOM REFERENCES
+      // ==================================================
+      const form = document.getElementById('employeeForm');
+      const fullNameInput = document.getElementById('fullName');
+      const emailInput = document.getElementById('email');
+      const phoneInput = document.getElementById('phone');
+      const positionInput = document.getElementById('position');
+      const departmentSelect = document.getElementById('department');
+      const salaryInput = document.getElementById('salary');
+      const addBtn = document.getElementById('addBtn');
+      const resetFormBtn = document.getElementById('resetFormBtn');
+
+      const formToggleBtn = document.getElementById('formToggleBtn');
+      const formCard = document.getElementById('formCard');
+
+      const searchInput = document.getElementById('searchInput');
+      const clearAllBtn = document.getElementById('clearAllBtn');
+
+      const filterChipsBar = document.getElementById('filterChipsBar');
+      const chipAll = document.getElementById('chipAll');
+      const countAll = document.getElementById('countAll');
+
+      const tableContainer = document.getElementById('employeeTableContainer');
+      const emptyState = document.getElementById('emptyState');
+      const chartBars = document.getElementById('chartBars');
+
+      const totalCountPill = document.getElementById('totalCountPill');
+      const deptCountPill = document.getElementById('deptCountPill');
+
+      const nameError = document.getElementById('nameError');
+      const emailError = document.getElementById('emailError');
+      const phoneError = document.getElementById('phoneError');
+      const positionError = document.getElementById('positionError');
+      const salaryError = document.getElementById('salaryError');
+
+      // Modal refs
+      const whatsappModal = document.getElementById('whatsappModal');
+      const modalRecipientName = document.getElementById('modalRecipientName');
+      const modalRecipientPhone = document.getElementById('modalRecipientPhone');
+      const whatsappMessage = document.getElementById('whatsappMessage');
+      const modalSendBtn = document.getElementById('modalSendBtn');
+      const modalCancelBtn = document.getElementById('modalCancelBtn');
+      const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+      // ==================================================
+      // CONSTANTS
+      // ==================================================
+      const DEPT_ORDER = ['Operations', 'IT', 'Finance', 'Sales', 'HR', 'Marketing'];
+      const STORAGE_KEY = 'employee_management_data_v3';
+
+      // ==================================================
+      // LOCALSTORAGE
+      // ==================================================
+      function loadEmployeesFromStorage() {
+        try {
+          const stored = localStorage.getItem('employee_management_data_v3');
+          return stored ? JSON.parse(stored) : [];
+        } catch (e) {
+          console.warn('Failed to load from localStorage', e);
+          return [];
+        }
+      }
+
+      function saveEmployeesToStorage() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
+      }
+
+      // ==================================================
+      // UTILITIES
+      // ==================================================
+      function generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substring(2, 6);
+      }
+
+      function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // Normalize phone: strip everything except digits and leading +
+      // WhatsApp requires: country code + number, no spaces/symbols (except we keep + for wa.me)
+      function normalizePhoneForWhatsApp(phone) {
+        if (!phone) return '';
+        // Remove all chars except digits and +
+        let cleaned = phone.replace(/[^\d+]/g, '');
+        // Remove leading + for wa.me URL (it accepts without)
+        cleaned = cleaned.replace(/^\+/, '');
+        return cleaned;
+      }
+
+      // ==================================================
+      // VALIDATION
+      // ==================================================
+      function validateForm() {
+        let isValid = true;
+
+        [nameError, emailError, phoneError, positionError, salaryError].forEach(el => el.textContent = '');
+        [fullNameInput, emailInput, phoneInput, positionInput, salaryInput].forEach(el => el.classList.remove('error-field'));
+
+        const name = fullNameInput.value.trim();
+        if (!name) {
+          nameError.textContent = 'Full name is required.';
+          fullNameInput.classList.add('error-field');
+          isValid = false;
+        } else if (name.length < 2) {
+          nameError.textContent = 'Name must be at least 2 characters.';
+          fullNameInput.classList.add('error-field');
+          isValid = false;
+        }
+
+        const email = emailInput.value.trim();
+        if (!email) {
+          emailError.textContent = 'Email is required.';
+          emailInput.classList.add('error-field');
+          isValid = false;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          emailError.textContent = 'Please enter a valid email address.';
+          emailInput.classList.add('error-field');
+          isValid = false;
+        }
+
+        // Phone is optional, but if provided must have at least 8 digits
+        const phone = phoneInput.value.trim();
+        if (phone) {
+          const digitsOnly = phone.replace(/\D/g, '');
+          if (digitsOnly.length < 8 || digitsOnly.length > 15) {
+            phoneError.textContent = 'Enter a valid phone (8–15 digits, include country code).';
+            phoneInput.classList.add('error-field');
+            isValid = false;
+          }
+        }
+
+        const position = positionInput.value.trim();
+        if (!position) {
+          positionError.textContent = 'Position is required.';
+          positionInput.classList.add('error-field');
+          isValid = false;
+        }
+
+        const salaryRaw = salaryInput.value.trim();
+        if (salaryRaw !== '') {
+          const salaryNum = Number(salaryRaw);
+          if (isNaN(salaryNum) || salaryNum < 0) {
+            salaryError.textContent = 'Salary must be a positive number.';
+            salaryInput.classList.add('error-field');
+            isValid = false;
+          }
+        }
+
+        return isValid;
+      }
+
+      function clearFormErrors() {
+        [nameError, emailError, phoneError, positionError, salaryError].forEach(el => el.textContent = '');
+        [fullNameInput, emailInput, phoneInput, positionInput, salaryInput].forEach(el => el.classList.remove('error-field'));
+      }
+
+      function resetFormToAddMode() {
+        form.reset();
+        clearFormErrors();
+        editMode = false;
+        editingId = null;
+        addBtn.textContent = '➕ Add Employee';
+        departmentSelect.selectedIndex = 0;
+      }
+
+      // ==================================================
+      // GROUP & SORT
+      // ==================================================
+      function groupEmployeesByDept(list) {
+        const groups = {};
+        list.forEach(emp => {
+          const dept = emp.department || 'Other';
+          if (!groups[dept]) groups[dept] = [];
+          groups[dept].push(emp);
+        });
+        return groups;
+      }
+
+      function sortDepartments(deptNames) {
+        return deptNames.sort((a, b) => {
+          const ia = DEPT_ORDER.indexOf(a);
+          const ib = DEPT_ORDER.indexOf(b);
+          if (ia !== -1 && ib !== -1) return ia - ib;
+          if (ia !== -1) return -1;
+          if (ib !== -1) return 1;
+          return a.localeCompare(b);
+        });
+      }
+
+      function sortEmployeesByName(list) {
+        return list.slice().sort((a, b) => a.name.localeCompare(b.name));
+      }
+
+      // ==================================================
+      // HEADER STATS
+      // ==================================================
+      function updateHeaderStats() {
+        const total = employees.length;
+        const deptSet = new Set(employees.map(e => e.department).filter(Boolean));
+        totalCountPill.textContent = `👤 Total: ${total}`;
+        deptCountPill.textContent = `🏢 Departments: ${deptSet.size}`;
+      }
+
+      // ==================================================
+      // FILTER CHIPS
+      // ==================================================
+      function renderFilterChips() {
+        countAll.textContent = employees.length;
+
+        const groups = groupEmployeesByDept(employees);
+        const deptNames = sortDepartments(Object.keys(groups));
+
+        const existingChips = filterChipsBar.querySelectorAll('.chip:not(#chipAll)');
+        existingChips.forEach(chip => chip.remove());
+
+        deptNames.forEach(dept => {
+          const count = groups[dept].length;
+          const chip = document.createElement('button');
+          chip.className = 'chip';
+          chip.dataset.dept = dept;
+          chip.innerHTML = `${escapeHtml(dept)} <span class="chip-count">${count}</span>`;
+
+          if (activeDeptFilter === dept) {
+            chip.classList.add('active');
+          }
+
+          chip.addEventListener('click', () => setActiveDeptFilter(dept));
+          filterChipsBar.appendChild(chip);
+        });
+
+        if (activeDeptFilter === 'all') {
+          chipAll.classList.add('active');
+        } else {
+          chipAll.classList.remove('active');
+        }
+
+        if (activeDeptFilter !== 'all' && !deptNames.includes(activeDeptFilter)) {
+          activeDeptFilter = 'all';
+          chipAll.classList.add('active');
+        }
+      }
+
+      function setActiveDeptFilter(dept) {
+        activeDeptFilter = dept;
+        const allChips = filterChipsBar.querySelectorAll('.chip');
+        allChips.forEach(chip => {
+          if (chip.dataset.dept === dept) {
+            chip.classList.add('active');
+          } else {
+            chip.classList.remove('active');
+          }
+        });
+        renderEmployeeTable();
+      }
+
+      // ==================================================
+      // RENDER TABLE
+      // ==================================================
+      function renderEmployeeTable() {
+        const searchTerm = searchInput.value.trim().toLowerCase();
+
+        const filtered = employees.filter(emp => {
+          if (activeDeptFilter !== 'all' && emp.department !== activeDeptFilter) return false;
+          if (searchTerm) {
+            return emp.name.toLowerCase().includes(searchTerm) ||
+                   emp.email.toLowerCase().includes(searchTerm);
+          }
+          return true;
+        });
+
+        updateHeaderStats();
+        renderFilterChips();
+
+        if (employees.length === 0) {
+          tableContainer.innerHTML = '';
+          emptyState.classList.remove('hidden');
+          renderChart();
+          return;
+        } else {
+          emptyState.classList.add('hidden');
+        }
+
+        if (filtered.length === 0) {
+          const filterLabel = activeDeptFilter === 'all'
+            ? ''
+            : ` in <strong>${escapeHtml(activeDeptFilter)}</strong>`;
+          tableContainer.innerHTML = `
+            <div class="table-container" style="border-radius: var(--radius-sm); border-top: 1px solid var(--border-light);">
+              <div style="text-align: center; padding: 3rem 1.5rem; color: var(--text-muted);">
+                🔍 No employees found${filterLabel}${searchTerm ? ' matching your search' : ''}.
+              </div>
+            </div>
+          `;
+          renderChart();
+          return;
+        }
+
+        const groups = groupEmployeesByDept(filtered);
+        const deptNames = sortDepartments(Object.keys(groups));
+
+        let html = '';
+        deptNames.forEach(dept => {
+          const deptEmployees = sortEmployeesByName(groups[dept]);
+          const count = deptEmployees.length;
+
+          html += `
+            <div class="dept-group">
+              <div class="dept-group-header">
+                <div class="dept-left">
+                  <span>🏢 ${escapeHtml(dept)}</span>
+                </div>
+                <span class="dept-count">${count} ${count === 1 ? 'member' : 'members'}</span>
+              </div>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Position</th>
+                      <th>Department</th>
+                      <th>Salary</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+          `;
+
+          deptEmployees.forEach(emp => {
+            const salaryDisplay = emp.salary ? `$${Number(emp.salary).toLocaleString()}` : '—';
+            const phoneDisplay = emp.phone ? escapeHtml(emp.phone) : '—';
+            const hasPhone = emp.phone && emp.phone.trim().length > 0;
+            const waBtn = hasPhone
+              ? `<button class="btn-whatsapp btn-small whatsapp-btn" data-id="${emp.id}" title="Send WhatsApp message">💬 WhatsApp</button>`
+              : `<button class="btn-outline btn-small" disabled title="No phone number on file" style="opacity:0.5;cursor:not-allowed;">💬 No Phone</button>`;
+
+            html += `
+              <tr data-id="${emp.id}">
+                <td data-label="ID">${emp.id.slice(-6).toUpperCase()}</td>
+                <td data-label="Name"><strong>${escapeHtml(emp.name)}</strong></td>
+                <td data-label="Email">${escapeHtml(emp.email)}</td>
+                <td data-label="Phone"><span class="phone-number">${phoneDisplay}</span></td>
+                <td data-label="Position">${escapeHtml(emp.position)}</td>
+                <td data-label="Department"><span class="badge-dept">${escapeHtml(emp.department)}</span></td>
+                <td data-label="Salary">${salaryDisplay}</td>
+                <td data-label="Actions">
+                  <div class="actions-cell">
+                    ${waBtn}
+                    <button class="btn-outline btn-small edit-btn" data-id="${emp.id}" title="Edit">✏️ Edit</button>
+                    <button class="btn-danger btn-small remove-btn" data-id="${emp.id}" title="Remove">🗑️ Remove</button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          });
+
+          html += `
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+        });
+
+        tableContainer.innerHTML = html;
+
+        // Attach listeners
+        tableContainer.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => startEditEmployee(e.currentTarget.dataset.id));
+        });
+
+        tableContainer.querySelectorAll('.remove-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => removeEmployee(e.currentTarget.dataset.id));
+        });
+
+        tableContainer.querySelectorAll('.whatsapp-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => openWhatsAppModal(e.currentTarget.dataset.id));
+        });
+
+        renderChart();
+      }
+
+      // ==================================================
+      // RENDER CHART
+      // ==================================================
+      function renderChart() {
+        const groups = groupEmployeesByDept(employees);
+        const deptNames = sortDepartments(Object.keys(groups));
+
+        if (deptNames.length === 0) {
+          chartBars.innerHTML = `
+            <div style="text-align:center; color: var(--text-muted); padding: 1rem; font-size: 0.9rem;">
+              No data available yet.
+            </div>
+          `;
+          return;
+        }
+
+        const maxCount = Math.max(...deptNames.map(d => groups[d].length));
+
+        chartBars.innerHTML = deptNames.map(dept => {
+          const count = groups[dept].length;
+          const pct = maxCount > 0 ? (count / maxCount) * 100 : 0;
+          const isActive = activeDeptFilter === dept;
+          return `
+            <div class="chart-row">
+              <div class="chart-label">🏢 ${escapeHtml(dept)}${isActive ? ' ⭐' : ''}</div>
+              <div class="chart-bar-track">
+                <div class="chart-bar-fill" style="width: ${pct}%;">
+                  ${count}
+                </div>
+              </div>
+              <div class="chart-value">${count}</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // ==================================================
+      // WHATSAPP MODAL
+      // ==================================================
+      function openWhatsAppModal(employeeId) {
+        const emp = employees.find(e => e.id === employeeId);
+        if (!emp) return;
+
+        if (!emp.phone || emp.phone.trim() === '') {
+          alert(`${emp.name} does not have a phone number on file. Please edit the employee to add one.`);
+          return;
+        }
+
+        currentWhatsAppEmployee = emp;
+
+        modalRecipientName.textContent = emp.name;
+        modalRecipientPhone.textContent = emp.phone;
+
+        // Default message template
+        const defaultMessage = `Hi ${emp.name.split(' ')[0]}, this is a message from the office.`;
+        whatsappMessage.value = defaultMessage;
+
+        whatsappModal.classList.remove('hidden');
+        setTimeout(() => whatsappMessage.focus(), 100);
+      }
+
+      function closeWhatsAppModal() {
+        whatsappModal.classList.add('hidden');
+        currentWhatsAppEmployee = null;
+      }
+
+      function sendWhatsAppMessage() {
+        if (!currentWhatsAppEmployee) return;
+
+        const emp = currentWhatsAppEmployee;
+        const message = whatsappMessage.value.trim();
+
+        if (!message) {
+          alert('Please type a message before sending.');
+          whatsappMessage.focus();
+          return;
+        }
+
+        const cleanPhone = normalizePhoneForWhatsApp(emp.phone);
+        if (!cleanPhone) {
+          alert('The phone number for this employee is invalid.');
+          return;
+        }
+
+        // Build WhatsApp URL — works on desktop (wa.me) and mobile (app)
+        const encodedMessage = encodeURIComponent(message);
+        const url = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+
+        // Open in new tab (WhatsApp Web on desktop, WhatsApp app on mobile)
+        window.open(url, '_blank', 'noopener,noreferrer');
+
+        closeWhatsAppModal();
+      }
+
+      // Close modal on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !whatsappModal.classList.contains('hidden')) {
+          closeWhatsAppModal();
+        }
+        // Ctrl+Enter inside textarea to send
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && document.activeElement === whatsappMessage) {
+          e.preventDefault();
+          sendWhatsAppMessage();
+        }
+      });
+
+      // Close modal when clicking overlay (outside the box)
+      whatsappModal.addEventListener('click', (e) => {
+        if (e.target === whatsappModal) closeWhatsAppModal();
+      });
+
+      modalCloseBtn.addEventListener('click', closeWhatsAppModal);
+      modalCancelBtn.addEventListener('click', closeWhatsAppModal);
+      modalSendBtn.addEventListener('click', sendWhatsAppMessage);
+
+      // ==================================================
+      // FORM SUBMIT
+      // ==================================================
+      function handleFormSubmit(e) {
+        e.preventDefault();
+        if (!validateForm()) return;
+
+        const name = fullNameInput.value.trim();
+        const email = emailInput.value.trim();
+        const phone = phoneInput.value.trim();
+        const position = positionInput.value.trim();
+        const department = departmentSelect.value;
+        const salaryRaw = salaryInput.value.trim();
+        const salary = salaryRaw === '' ? null : Number(salaryRaw);
+
+        if (editMode && editingId) {
+          const index = employees.findIndex(emp => emp.id === editingId);
+          if (index !== -1) {
+            employees[index] = { ...employees[index], name, email, phone, position, department, salary };
+          }
+          resetFormToAddMode();
+        } else {
+          employees.push({ id: generateId(), name, email, phone, position, department, salary });
+          form.reset();
+          clearFormErrors();
+        }
+
+        saveEmployeesToStorage();
+        renderEmployeeTable();
+        collapseForm();
+      }
+
+      // ==================================================
+      // EDIT
+      // ==================================================
+      function startEditEmployee(id) {
+        const emp = employees.find(e => e.id === id);
+        if (!emp) return;
+
+        editMode = true;
+        editingId = id;
+
+        fullNameInput.value = emp.name;
+        emailInput.value = emp.email;
+        phoneInput.value = emp.phone || '';
+        positionInput.value = emp.position;
+        departmentSelect.value = emp.department;
+        salaryInput.value = emp.salary !== null ? emp.salary : '';
+
+        addBtn.textContent = '💾 Update Employee';
+        clearFormErrors();
+        expandForm();
+
+        document.querySelector('.main-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // ==================================================
+      // REMOVE
+      // ==================================================
+      function removeEmployee(id) {
+        const emp = employees.find(e => e.id === id);
+        if (!emp) return;
+
+        if (!confirm(`Remove ${emp.name} (${emp.position}) from the employee list?`)) return;
+
+        employees = employees.filter(e => e.id !== id);
+
+        if (editMode && editingId === id) resetFormToAddMode();
+
+        saveEmployeesToStorage();
+        renderEmployeeTable();
+      }
+
+      // ==================================================
+      // CLEAR ALL
+      // ==================================================
+      function clearAllEmployees() {
+        if (employees.length === 0) {
+          alert('No employees to clear.');
+          return;
+        }
+        if (!confirm(`⚠️ Remove ALL ${employees.length} employees? This cannot be undone.`)) return;
+
+        employees = [];
+        activeDeptFilter = 'all';
+        resetFormToAddMode();
+        saveEmployeesToStorage();
+        renderEmployeeTable();
+      }
+
+      // ==================================================
+      // FORM TOGGLE
+      // ==================================================
+      function expandForm() {
+        formCard.classList.remove('collapsed');
+        formToggleBtn.classList.add('open');
+        formToggleBtn.querySelector('span:first-child').textContent = '📝 Employee Details';
+      }
+
+      function collapseForm() {
+        formCard.classList.add('collapsed');
+        formToggleBtn.classList.remove('open');
+        formToggleBtn.querySelector('span:first-child').textContent = '➕ Add New Employee';
+      }
+
+      formToggleBtn.addEventListener('click', () => {
+        if (formCard.classList.contains('collapsed')) {
+          expandForm();
+        } else {
+          collapseForm();
+        }
+      });
+
+      // ==================================================
+      // EVENT LISTENERS
+      // ==================================================
+      chipAll.addEventListener('click', () => setActiveDeptFilter('all'));
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+      form.addEventListener('submit', handleFormSubmit);
+      resetFormBtn.addEventListener('click', resetFormToAddMode);
+      clearAllBtn.addEventListener('click', clearAllEmployees);
+      searchInput.addEventListener('input', renderEmployeeTable);
+
+      // ==================================================
+      // SEED DATA (ALL 16 from STAFF I CARD.pdf + phones)
+      // ==================================================
+      if (employees.length === 0) {
+        // Note: These phone numbers are placeholder examples.
+        // Replace them with real numbers via the Edit button.
+        const seedEmployees = [
+          // Operations
+          { name: 'Mukesh Maurya', position: 'Founder & Director', department: 'Operations', phone: '+91 98765 10001' },
+          { name: 'Vikash Prasad', position: 'Director - Legal & Administration', department: 'Operations', phone: '+91 98765 10004' },
+          { name: 'Zarna Upadhyay', position: 'Regional Manager', department: 'Operations', phone: '+91 98765 10005' },
+          { name: 'Sanjay Bhardwaj', position: 'Regional Manager', department: 'Operations', phone: '+91 98765 10007' },
+          { name: 'Suraj Rajbhar', position: 'Warehouse Supervisor', department: 'Operations', phone: '+91 98765 10011' },
+
+          // Finance
+          { name: 'Arjun Bhagat', position: 'Director - Accounts & Finance', department: 'Finance', phone: '+91 98765 10002' },
+
+          // HR
+          { name: 'Santosh Pal', position: 'Director - Inspection & HR', department: 'HR', phone: '+91 98765 10003' },
+
+          // IT
+          { name: 'Ashok Rathod', position: 'Senior Technical Executive', department: 'IT', phone: '+91 98765 10006' },
+          { name: 'Ajit Prasad', position: 'Senior Technical Executive', department: 'IT', phone: '+91 98765 10010' },
+          { name: 'Ajay Maurya', position: 'Senior Technical Executive', department: 'IT', phone: '+91 98765 10012' },
+          { name: 'Abhishek Maurya', position: 'Junior Technical Executive', department: 'IT', phone: '+91 98765 10013' },
+
+          // Sales
+          { name: 'Ruchita Rajpurohit', position: 'Senior Sales Executive', department: 'Sales', phone: '+91 98765 10008' },
+          { name: 'Kanti Prajapati', position: 'Junior Sales Executive', department: 'Sales', phone: '+91 98765 10009' },
+          { name: 'Vinay Kushwaha', position: 'Sales & Service Executive', department: 'Sales', phone: '+91 98765 10014' },
+          { name: 'Sangeeta Kushwaha', position: 'Senior Sales Executive', department: 'Sales', phone: '+91 98765 10015' },
+          { name: 'Rajkiran Kushwaha', position: 'Sales & Service Executive', department: 'Sales', phone: '+91 98765 10016' }
+        ];
+
+        seedEmployees.forEach(emp => {
+          const parts = emp.name.toLowerCase().split(' ');
+          const email = parts.length >= 2
+            ? `${parts[0]}.${parts[parts.length - 1]}@company.com`
+            : `${parts[0]}@company.com`;
+
+          employees.push({
+            id: generateId(),
+            name: emp.name,
+            email: email,
+            phone: emp.phone,
+            position: emp.position,
+            department: emp.department,
+            salary: null
+          });
+        });
+
+        saveEmployeesToStorage();
+      }
+
+      // ==================================================
+      // INITIAL LOAD
+      // ==================================================
+      loadTheme();
+      renderEmployeeTable();
+
+    })();
+  </script>
+</body>
+</html>
